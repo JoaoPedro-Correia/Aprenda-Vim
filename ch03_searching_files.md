@@ -1,39 +1,46 @@
-# Ch03. Searching Files
+# Ch03. Procurando Arquivos
 
-The goal of this chapter is to give you an introduction on how to search quickly in Vim. Being able to search quickly is a great way to jump-start your Vim productivity. When I figured out how to search files quickly, I made the switch to use Vim full-time.
+O objetivo desse capítulo é dar uma introdução de como realizar buscas rápidas no Vim. Ser capaz de pesquisar rapidamente é um ótima maneira de impulsionar sua produtividade no Vim. Quando eu descobri como pesquisar arquivos rapidamente, decidi usar o Vim como editor principal.
 
-This chapter is divided into two parts: how to search without plugins and how to search with [fzf.vim](https://github.com/junegunn/fzf.vim) plugin. Let's get started!
+Esse capítulo é dividido em duas partes: como procurar sem plugins e como buscar usando o pluguin [fzf.vim](https://github.com/junegunn/fzf.vim)
 
-## Opening and Editing Files
+## Abrindo e Editando Arquivos
 
-To open a file in Vim, you can use `:edit`.
+Ao abrir um arquivo no Vim, você pode usar o comando `:edit`
 
 ```
 :edit file.txt
 ```
 
-If `file.txt` exists, it opens the `file.txt` buffer. If `file.txt` doesn't exist, it creates a new buffer for `file.txt`.
+Se `file.txt` existir, ele será aberto no buffer. Caso `file.txt` não exista, o arquivo será criado em um buffer novo.
 
-Autocomplete with `<Tab>` works with `:edit`. For example, if your file is inside a [Rails](https://rubyonrails.org/) *a*pp *c*ontroller *u*sers controller directory `./app/controllers/users_controllers.rb`, you can use `<Tab>` to expand the terms quickly:
+*Autocomplete* com `<Tab>` funciona no comando `:edit`. Por exemplo, se seu arquivo está dentro de um diretório de controlador de usuários do controlador de aplicativos [Rails](https://rubyonrails.org/) `./app/controllers/users_controllers.rb` você pode usar `<Tab>` para expandir os termos rapidamente:
 
 ```
 :edit a<Tab>c<Tab>u<Tab>
 ```
 
+`:edit` aceita wildcards como argumento. `*` corresponde a qualquer arquivo no diretório. Se você só está buscando por arquivos com extensão `.yml` no diretório corrente: 
+<br>
 `:edit` accepts wildcards arguments. `*` matches any file in the current directory. If you are only looking for files with `.yml` extension in the current directory:
 
 ```
 :edit *.yml<Tab>
 ```
-
+Vim dará a você uma lista de todos os arquivos `.yml` no diretório atual para escolher.
+<br>
 Vim will give you a list of all `.yml` files in the current directory to choose from.
 
+Você pode usar `**` para procurar recursivamente. Se você quer procurar por todos os arquivos `*.md` no seu projeto, mas não sabe em qual diretório buscar, você pode fazer isso:
+<br>
 You can use `**` to search recursively. If you want to look for all `*.md` files in your project, but you are not sure in which directories, you can do this:
 
 ```
 :edit **/*.md<Tab>
 ```
 
+`:edit` pode ser usado para rodar `netrw`, que é o explorador de arquivos integrado do Vim. Para fazer isso, forneça um argumento de diretório ao comando `:edit` em vez do arquivo.
+<br>
 `:edit` can be used to run `netrw`, Vim's built-in file explorer. To do that, give `:edit` a directory argument instead of file:
 
 ```
@@ -41,7 +48,7 @@ You can use `**` to search recursively. If you want to look for all `*.md` files
 :edit test/unit/
 ```
 
-## Searching Files With Find
+## Procurando Arquivos Usando o Comando Find
 
 You can find files with `:find`. For example:
 
@@ -59,7 +66,7 @@ Autocomplete also works with `:find`:
 
 You may notice that `:find` looks like `:edit`. What's the difference?
 
-## Find and Path
+## Comandos Find e Path
 
 The difference is that `:find` finds file in `path`, `:edit` doesn't. Let's learn a little bit about `path`. Once you learn how to modify your paths, `:find` can become a powerful searching tool. To check what your paths are, do:
 
@@ -111,7 +118,7 @@ You might be thinking to add the entire project directories so when you press `t
 
 You can add the `set path+={your-path-here}` in your vimrc. Updating `path` takes only a few seconds and doing so can save you a lot of time.
 
-## Searching in Files With Grep
+## Procurando Arquivo Usando o Comando Grep
 
 If you need to find in files (find phrases in files), you can use grep. Vim has two ways of doing that:
 
@@ -158,7 +165,7 @@ Note that instead of using `/pattern/`, it follows the terminal grep syntax `"pa
 
 Vim defines the `grepprg` variable to determine which external program to run when running the `:grep` Vim command so that you don't have to close Vim and invoke the terminal `grep` command. Later, I will show you how to change the default program invoked when using the `:grep` Vim command.
 
-## Browsing Files With Netrw
+## Navegando Por Aquivos Usando o Comando Netrw
 
 `netrw` is Vim's built-in file explorer. It is useful to see a project's hierarchy. To run `netrw`, you need these two settings in your `.vimrc`:
 
@@ -210,7 +217,7 @@ Now that you've learned how to search files in Vim with built-in tools, let's le
 
 One thing that modern text editors get right and that Vim didn't is how easy it is to find files, especially via fuzzy search. In this second half of the chapter, I will show you how to use [fzf.vim](https://github.com/junegunn/fzf.vim) to make searching in Vim easy and powerful.
 
-## Setup
+## Configuração
 
 First, make sure you have [fzf](https://github.com/junegunn/fzf) and [ripgrep](https://github.com/BurntSushi/ripgrep) downloaded. Follow the instruction on their github repo. The commands `fzf` and `rg` should now be available after successful installs.
 
@@ -242,7 +249,7 @@ After adding these lines, you will need to open `vim` and run `:PlugInstall`. It
 
 For more info about this plugin, you can check out [fzf.vim repo](https://github.com/junegunn/fzf/blob/master/README-VIM.md).
 
-## Fzf Syntax
+## Sintaxe do Fzf
 
 To use fzf efficiently, you should learn some basic fzf syntax. Fortunately, the list is short:
 
@@ -254,7 +261,7 @@ To use fzf efficiently, you should learn some basic fzf syntax. Fortunately, the
 
 You can mix and match these options. For example, `^hello | ^welcome friends$` will search for the phrase starting with either "welcome" or "hello" and ending with "friends".
 
-## Finding Files
+## Encontrando Arquivos
 
 To search for files inside Vim using fzf.vim plugin, you can use the `:Files` method. Run `:Files` from Vim and you will be prompted with fzf search prompt.
 
@@ -264,7 +271,7 @@ Since you will be using this command frequently, it is good to have this mapped 
 nnoremap <silent> <C-f> :Files<CR>
 ```
 
-## Finding in Files
+## Encontrando no Arquivo
 
 To search inside files, you can use the `:Rg` command.
 
@@ -274,7 +281,7 @@ Again, since you will probably use this frequently, let's map it to a keyboard s
 nnoremap <silent> <Leader>f :Rg<CR>
 ```
 
-## Other Searches
+## Outras Buscas
 
 Fzf.vim provides many other search commands. I won't go through each one of them here, but you can check them out [here](https://github.com/junegunn/fzf.vim#commands).
 
@@ -293,7 +300,7 @@ nnoremap <silent> <Leader>h: :History:<CR>
 nnoremap <silent> <Leader>h/ :History/<CR>
 ```
 
-## Replacing Grep With Rg
+## Substituindo o Comando Grep Pelo Rg
 
 As mentioned earlier, Vim has two ways to search in files: `:vim` and `:grep`. `:grep` uses external search tool that you can reassign using the `grepprg` keyword. I will show you how to configure Vim to use ripgrep instead of terminal grep when running the `:grep` command.
 
@@ -313,7 +320,7 @@ You might wonder, "Well, this is nice but I never used `:grep` in Vim, plus can'
 
 That is a very good question. You may need to use `:grep` in Vim to do search and replace in multiple files, which I will cover next.
 
-## Search and Replace in Multiple Files
+## Procurando e Substituindo em Multiplos Arquivos
 
 Modern text editors like VSCode makes it very easy to search and replace a string across multiple files. In this section, I will show you two different methods to easily do that in Vim.
 
