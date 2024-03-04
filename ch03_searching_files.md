@@ -21,27 +21,19 @@ Se `file.txt` existir, ele será aberto no buffer. Caso `file.txt` não exista, 
 ```
 
 `:edit` aceita wildcards como argumento. `*` corresponde a qualquer arquivo no diretório. Se você só está buscando por arquivos com extensão `.yml` no diretório corrente: 
-<br>
-`:edit` accepts wildcards arguments. `*` matches any file in the current directory. If you are only looking for files with `.yml` extension in the current directory:
 
 ```
 :edit *.yml<Tab>
 ```
 Vim dará a você uma lista de todos os arquivos `.yml` no diretório atual para escolher.
-<br>
-Vim will give you a list of all `.yml` files in the current directory to choose from.
 
 Você pode usar `**` para procurar recursivamente. Se você quer procurar por todos os arquivos `*.md` no seu projeto, mas não sabe em qual diretório buscar, você pode fazer isso:
-<br>
-You can use `**` to search recursively. If you want to look for all `*.md` files in your project, but you are not sure in which directories, you can do this:
 
 ```
 :edit **/*.md<Tab>
 ```
 
 `:edit` pode ser usado para rodar `netrw`, que é o explorador de arquivos integrado do Vim. Para fazer isso, forneça um argumento de diretório ao comando `:edit` em vez do arquivo.
-<br>
-`:edit` can be used to run `netrw`, Vim's built-in file explorer. To do that, give `:edit` a directory argument instead of file:
 
 ```
 :edit .
@@ -49,42 +41,39 @@ You can use `**` to search recursively. If you want to look for all `*.md` files
 ```
 
 ## Procurando Arquivos Usando o Comando Find
-
-You can find files with `:find`. For example:
+Você pode encontrar arquivos com o comando `:find`. Por exemplo:
 
 ```
 :find package.json
 :find app/controllers/users_controller.rb
 ```
-
-Autocomplete also works with `:find`:
+Autocomplete também funciona com `:find`:
 
 ```
 :find p<Tab>                " to find package.json
 :find a<Tab>c<Tab>u<Tab>    " to find app/controllers/users_controller.rb
 ```
-
-You may notice that `:find` looks like `:edit`. What's the difference?
+Como você pode notar, o comando `:find` é parecido com o `:edit`. Então qual é a diferença?
 
 ## Comandos Find e Path
 
-The difference is that `:find` finds file in `path`, `:edit` doesn't. Let's learn a little bit about `path`. Once you learn how to modify your paths, `:find` can become a powerful searching tool. To check what your paths are, do:
+A diferença é que `:find` encotra arquivo pelo `path`, `:edit` não. Vamos aprender um pouco sobre o `path`. Uma vez que você aprende a modificar o seu `path`, o comando `:find` se torna uma ferramenta de busca poderosa. Cheque o que o seu `path` é com o comando: 
 
 ```
 :set path?
 ```
 
-By default, yours probably look like this:
+Por padrão, provavelmente deve aparecer algo como isso:
 
 ```
 path=.,/usr/include,,
 ```
 
-- `.` means to search in the directory of the currently opened file.
-- `,` means to search in the current directory.
-- `/usr/include` is the typical directory for C libraries header files.
+- `.` procura no diretório do arquivo corrente no qual foi aberto
+- `,` procura no diretório corrente. 
+- `/usr/include` é tipicamente o diretório onde os arquivos das bibliotecas em C se encontram. 
 
-The first two are important in our context and the third one can be ignored for now. The takeaway here is that you can modify your own paths, where Vim will look for files. Let's assume this is your project structure:
+Os dois primeiros são importantes para o nosso contexto e o terceiro pode ser ignorado por agora. O ponto principal aqui é que você pode madificar o seu próprio `path`, que é onde o Vim ira procurar por arquivos.  Vamos assumir essa é sua estrutura de projeto:  
 
 ```
 app/
@@ -96,27 +85,27 @@ app/
     ...
 ```
 
-If you want to go to `users_controller.rb` from the root directory, you have to go through several directories (and pressing a considerable amount of tabs). Often when working with a framework, you spend 90% of your time in a particular directory. In this situation, you only care about going to the `controllers/` directory with the least amount of keystrokes. The `path` setting can shorten that journey.
+Se você está querendo ir para `users_controller.rb` a partir do diretório raiz, você vai precisar ir através desses diversos diretórios (e pressionar uma quantidade considerável de tabs). Depois quando você estiver trabalhando com framework, 90% do seu tempo vai ser gasto em um diretório específico. Nessa situação, você só vai se importar em ir ao diretório `controllers/` digitando menos.
 
-You need to add the `app/controllers/` to the current `path`. Here is how you can do it:
+Você precisa adicionar o caminho `app/controllers/` no `path` corrente. Como você pode fazer isso:
 
 ```
 :set path+=app/controllers/
 ```
 
-Now that your path is updated, when you type `:find u<Tab>`, Vim will now search inside `app/controllers/` directory for files starting with "u".
+Agora que seu `path` está atualizado, quando você digitar `:find u<Tab>`, Vim vai procurar dentro do diretório `app/controllers/` por arquivos que começam com 'u'.
 
-If you have a nested `controllers/` directory, like `app/controllers/account/users_controller.rb`, Vim won't find `users_controllers`. Instead, you need to add  `:set path+=app/controllers/**`  in order for autocompletion will find `users_controller.rb`. This is great! Now you can find the users controller with 1 press of tab instead of 3.
+Se o arquivo fica dentro de outro subdiretório de `controllers/`, como `app/controllers/account/users_controller.rb`, o Vim não será capaz de encontrar o arquivo. Para ser possível, você precisa adicionar `:set path+=app/controllers/**` para o autocomplete encontrar o `users_controller.rb`. Isso é ótimo! Agora você pode encontrar o `users_controller.rb` com 1 tab em vez de 3.
 
-You might be thinking to add the entire project directories so when you press `tab`, Vim will search everywhere for that file, like this:
+Você pode estar pensando em adicionar diretórios de projetos inteiros, para quando você pressionar `tab` o Vim já procura em todos os subdiretórios por esse arquivo, exemplo:
 
 ```
 :set path+=$PWD/**
 ```
 
-`$PWD` is the current working directory. If you try to add your entire project to `path` hoping to make all files reachable upon a `tab` press, although this may work for a small project, doing this will slow down your search significantly if you have a large number of files in your project. I recommend adding only the `path` of your most visited files / directories.
+`$PWD` é o diretório de trabalho atual. Se você tentar adicionar projetos inteiros no `path` esperando que todos os aquivos sejam alcançados pressionando `tab`, embora isso possa funcionar para pequenos projetos, fazer isso torna a sua busca significativamente mais lenta se você tem um grande número de arquivos no seu projeto. Eu recomendo fazer isso só para os diretórios/arquivo mais visitados.
 
-You can add the `set path+={your-path-here}` in your vimrc. Updating `path` takes only a few seconds and doing so can save you a lot of time.
+Você pode adicionar o `set path+={seu-path-aqui}` no arquivo vimrc. Atualizar o `path` vai levar só alguns segundos e fazendo isso pode te salvar por muito tempo.
 
 ## Procurando Arquivo Usando o Comando Grep
 
